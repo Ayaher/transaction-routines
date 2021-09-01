@@ -11,10 +11,14 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 
 import br.com.bbex.transactions.model.Account;
+import br.com.bbex.transactions.model.OperationType;
 import br.com.bbex.transactions.model.Transaction;
+
+import java.util.Date;
 import java.util.Optional;
 
 import br.com.bbex.transactions.repository.AccountRepository;
+import br.com.bbex.transactions.repository.OperationTypeRepository;
 import br.com.bbex.transactions.repository.TransactionRepository;
 
 @RestController
@@ -26,6 +30,9 @@ public class TransactionCrontroller {
 
     @Autowired
     AccountRepository accountRepository;
+
+    @Autowired
+    OperationTypeRepository operationTypeRepository;
 
     @GetMapping(value = "/transactions/{transactionId}")
     public ResponseEntity<Transaction> listTransaction(@PathVariable long transactionId) {
@@ -44,8 +51,11 @@ public class TransactionCrontroller {
         Transaction transactionNew = new Transaction(transactionBody.amount);
 
         Optional<Account> accountData = accountRepository.findById(transactionBody.account_id);
-        if(accountData.isPresent()){
+        Optional<OperationType> operationTypeData = operationTypeRepository.findById(transactionBody.operation_type_id);
+        if (accountData.isPresent() && operationTypeData.isPresent()) {
             transactionNew.setAccount(accountData.get());
+            transactionNew.setOperationType(operationTypeData.get());
+            transactionNew.setEventDate(new Date());
             Transaction transactionCreated = transactionRepository.save(transactionNew);
             return new ResponseEntity<>(transactionCreated, HttpStatus.CREATED);
         } else {
@@ -58,11 +68,21 @@ public class TransactionCrontroller {
     public static class TransactionBody {
         private long account_id;
 
+        private long operation_type_id;
+
         private double amount;
 
         public TransactionBody() {
             this.account_id = 0;
             this.amount = 0;
+        }
+
+        public void setOperation_type_id(long operation_type_id) {
+            this.operation_type_id = operation_type_id;
+        }
+
+        public long getOperation_type_id() {
+            return this.operation_type_id;
         }
 
         public void setAccount_id(long account_id) {

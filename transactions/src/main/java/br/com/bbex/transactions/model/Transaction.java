@@ -26,10 +26,14 @@ public class Transaction {
     @JoinColumn(name = "account_id", nullable = false)
     private Account account;
 
+    @ManyToOne
+    @JoinColumn(name = "operation_type_id", nullable = false)
+    private OperationType operationType;
+
     @Column(name = "amount")
     private double amount;
 
-    @Column(name = "eventDate")
+    @Column(name = "event_date")
     private Date eventDate;
 
     public double getAmount() {
@@ -70,6 +74,14 @@ public class Transaction {
 
     public void setTransaction_id(long transaction_id) {
         this.transaction_id = transaction_id;
+    }
+
+    public OperationType getOperationType() {
+        return this.operationType;
+    }
+
+    public void setOperationType(OperationType operationType) {
+        this.operationType = operationType;
     }
 
     /**
