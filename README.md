@@ -1,17 +1,12 @@
-# transaction-routines
+# Transactions Routines
 
 An API with transactions routines.
 
-## Build
-
-
+## Build and Running
 
 ```
+$ gradle bootJar
 $ docker-compose up
 ```
 
-API:
-
-```
-$ gradle run
-```
+API will be available on `http://localhost:8080/api`.
