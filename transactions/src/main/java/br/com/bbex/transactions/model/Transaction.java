@@ -41,11 +41,18 @@ public class Transaction {
     }
 
     public Transaction() {
-
+        this.amount = 0;
+        this.eventDate = new Date();
     }
 
     public Transaction(double amount) {
         this.amount = amount;
+        this.eventDate = new Date();
+    }
+
+    public Transaction(double amount, Date eventDate){
+        this.amount = amount;
+        this.eventDate = eventDate;
     }
 
     public Account getAccount() {
@@ -85,7 +92,7 @@ public class Transaction {
     }
 
     /**
-     * Método de conveniência para converter este objeto para JSON.
+     * Convenience method for get a JSON representation of this object.
      */
     @Override
     public String toString() {

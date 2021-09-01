@@ -65,6 +65,9 @@ public class TransactionCrontroller {
         return new ResponseEntity<>(null, HttpStatus.NOT_FOUND);
     }
 
+    /**
+     * Encapsulates the request for new Transaction.
+     */
     public static class TransactionBody {
         private long account_id;
 

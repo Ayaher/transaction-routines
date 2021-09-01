@@ -9,6 +9,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.ApplicationArguments;
 import org.springframework.boot.ApplicationRunner;
 
+/**
+ * Loads default data into the database.
+ */
 @Component
 public class DataLoader implements ApplicationRunner {
 

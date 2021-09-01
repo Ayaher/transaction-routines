@@ -55,7 +55,7 @@ public class OperationType {
     }
 
     /**
-     * Método de conveniência para converter este objeto para JSON.
+     * Convenience method for get a JSON representation of this object.
      */
     @Override
     public String toString() {

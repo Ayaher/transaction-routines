@@ -45,9 +45,8 @@ public class Account {
         this.document_number = document_number;
     }
 
-
     /**
-     * Método de conveniência para converter este objeto para JSON.
+     * Convenience method for get a JSON representation of this object.
      */
     @Override
     public String toString() {
