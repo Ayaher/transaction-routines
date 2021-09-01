@@ -23,10 +23,10 @@ public class AccountController {
 
     @GetMapping(value = "/accounts/{accountId}")
     public ResponseEntity<Account> listAccount(@PathVariable long accountId) {
-        Optional<Account> tutorialData = accountRepository.findById(accountId);
+        Optional<Account> accountData = accountRepository.findById(accountId);
 
-        if (tutorialData.isPresent()) {
-            return new ResponseEntity<>(tutorialData.get(), HttpStatus.OK);
+        if (accountData.isPresent()) {
+            return new ResponseEntity<>(accountData.get(), HttpStatus.OK);
         } else {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
