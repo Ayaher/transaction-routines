@@ -1,10 +1,10 @@
 # transaction-routines
 
-Uma API com rotinas transacionais.
+An API with transactions routines.
 
-## Execução
+## Build
 
-Banco de Dados:
+
 
 ```
 $ docker-compose up
