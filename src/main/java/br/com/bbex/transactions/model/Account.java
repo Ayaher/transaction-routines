@@ -21,6 +21,9 @@ public class Account {
     @Column(name = "document_number")
     private String document_number;
 
+    @Column(name = "available_credit_limit")
+    private double availableCreditLimit;
+
     public Account() {
         this.document_number = "";
     }
@@ -43,6 +46,14 @@ public class Account {
 
     public void setDocument_number(String document_number) {
         this.document_number = document_number;
+    }
+
+    public double getAvailableCreditLimit() {
+        return this.availableCreditLimit;
+    }
+
+    public void setAvailableCreditLimit(double availableCreditLimit) {
+        this.availableCreditLimit = availableCreditLimit;
     }
 
     /**

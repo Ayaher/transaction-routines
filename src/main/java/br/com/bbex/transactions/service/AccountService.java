@@ -7,6 +7,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
+import br.com.bbex.transactions.controller.request.CreditLimitRequest;
 import br.com.bbex.transactions.model.Account;
 import br.com.bbex.transactions.repository.AccountRepository;
 
@@ -35,11 +36,41 @@ public class AccountService {
         }
 
         try {
-			Account accountCreated = accountRepository.save(new Account(account.getDocument_number()));
-			return new ResponseEntity<>(accountCreated, HttpStatus.CREATED);
-		} catch (Exception e) {
-			return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
-		}
+            Account accountCreated = accountRepository.save(new Account(account.getDocument_number()));
+            return new ResponseEntity<>(accountCreated, HttpStatus.CREATED);
+        } catch (Exception e) {
+            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+        }
     }
-    
+
+    public ResponseEntity<Account> setCreditLimit(long accountId, CreditLimitRequest creditLimitRequest) {
+        if (creditLimitRequest.getCreditLimit() < 0 || accountId <= 0) {
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        }
+        
+        Optional<Account> accountData = accountRepository.findById(accountId);
+        if (accountData.isPresent()) {
+            Account account = accountData.get();
+            account.setAvailableCreditLimit(creditLimitRequest.getCreditLimit());
+            Account accountCreated = accountRepository.save(account);
+            return new ResponseEntity<>(accountCreated, HttpStatus.CREATED);
+        } else {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
+    }
+
+    public ResponseEntity<CreditLimitRequest> listCreditLimit(long accountId) {
+        if (accountId <= 0) {
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        }
+
+        Optional<Account> accountData = accountRepository.findById(accountId);
+        if (accountData.isPresent()) {
+            Account account = accountData.get();            
+            return new ResponseEntity<>(new CreditLimitRequest(account.getAvailableCreditLimit()), HttpStatus.OK);
+        } else {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
+    }
+
 }
