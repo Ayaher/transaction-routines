@@ -42,20 +42,47 @@ public class TransactionService {
     }
 
     public ResponseEntity<Transaction> createTransaction(TransactionRequest transactionBody) {
-        if(transactionBody.getAccount_id() <= 0 || transactionBody.getOperation_type_id() <= 0 || transactionBody.getAmount() < 0) {
+        if (transactionBody.getAccount_id() <= 0 || transactionBody.getOperation_type_id() <= 0
+                || transactionBody.getAmount() < 0) {
             new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         }
 
         Transaction transactionNew = new Transaction(transactionBody.getAmount());
         Optional<Account> accountData = accountRepository.findById(transactionBody.getAccount_id());
-        Optional<OperationType> operationTypeData = operationTypeRepository.findById(transactionBody.getOperation_type_id());
+        Optional<OperationType> operationTypeData = operationTypeRepository
+                .findById(transactionBody.getOperation_type_id());
 
         if (accountData.isPresent() && operationTypeData.isPresent()) {
-            transactionNew.setAccount(accountData.get());
-            transactionNew.setOperationType(operationTypeData.get());
-            transactionNew.setEventDate(new Date());
-            Transaction transactionCreated = transactionRepository.save(transactionNew);
-            return new ResponseEntity<>(transactionCreated, HttpStatus.CREATED);
+            // Execute transaction
+            Account account = accountData.get();
+            OperationType operationType = operationTypeData.get();
+
+            double balance;
+            boolean canExecute = false;
+            if (operationType.getDecrease()) {
+                balance = account.getAvailableCreditLimit() - transactionNew.getAmount();
+                canExecute = balance >= 0 ? true : false;
+            } else {
+                balance = account.getAvailableCreditLimit() + transactionNew.getAmount();
+                canExecute = true;
+            }
+
+            if (canExecute) {
+                // execute
+                account.setAvailableCreditLimit(balance);
+                // save account
+                accountRepository.save(account);
+                // save transaction
+                transactionNew.setAccount(accountData.get());
+                transactionNew.setOperationType(operationTypeData.get());
+                transactionNew.setEventDate(new Date());
+                Transaction transactionCreated = transactionRepository.save(transactionNew);
+                return new ResponseEntity<>(transactionCreated, HttpStatus.CREATED);
+            } else {
+                // insuficient funds
+                return new ResponseEntity<>(transactionNew, HttpStatus.BAD_REQUEST);
+            }
+
         } else {
             new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
@@ -63,5 +90,4 @@ public class TransactionService {
         return new ResponseEntity<>(HttpStatus.NOT_FOUND);
     }
 
-    
 }
