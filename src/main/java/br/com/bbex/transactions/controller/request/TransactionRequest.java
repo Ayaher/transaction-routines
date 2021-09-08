@@ -16,6 +16,12 @@ public class TransactionRequest {
         this.amount = 0;
     }
 
+    public TransactionRequest(long account_id, long operation_type_id, double amount) {
+        this.account_id = account_id;
+        this.operation_type_id = operation_type_id;
+        this.amount = amount;
+    }
+
     public void setOperation_type_id(long operation_type_id) {
         this.operation_type_id = operation_type_id;
     }
